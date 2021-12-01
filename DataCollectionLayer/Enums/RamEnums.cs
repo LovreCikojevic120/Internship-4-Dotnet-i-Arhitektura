@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataLayer.Enums
+namespace DataCollectionLayer.Enums
 {
     public class RamEnums
     {

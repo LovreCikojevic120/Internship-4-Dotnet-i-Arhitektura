@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DataLayer.Interfaces;
+using DataCollectionLayer.Interfaces;
 
-namespace DataLayer.Entities
+namespace DataCollectionLayer.Entities
 {
     public class Order
     {

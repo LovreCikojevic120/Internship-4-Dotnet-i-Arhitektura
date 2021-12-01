@@ -1,26 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DataLayer.Entities;
-using DataLayer.Enums;
-using DataLayer.Interfaces;
+﻿using System.Collections.Generic;
+using DataCollectionLayer.Entities;
+using DataCollectionLayer.Enums;
+using DataCollectionLayer.Interfaces;
 
-namespace PCPartPickerDataLayer
+namespace DataCollectionLayer
 {
     public static class DataBank
     {
-        private static Customer _customer;
-        private static List<Order> _orderList = new List<Order>();
+        private static Customer _currentCustomer;
+        private static List<Customer> _customers = new List<Customer>();
         private static Dictionary<string, List<int>> _availableParts = new Dictionary<string, List<int>>();
 
-        public static Customer customer { get => _customer; }
-        public static List<Order> orderList { get => _orderList; }
-
+        public static List<Customer> customers { get => _customers; }
+        public static Customer currentCustomer { get => _currentCustomer; set => _currentCustomer = value; }
         public static Dictionary<string, List<int>> availableParts { get => _availableParts; }
 
-        public static void PopulateStore()
+        static DataBank()
         {
             _availableParts.Add("CPU", new List<int> {
                 (int)CpuEnums.CpuList.AMD_DecaCore,
@@ -47,15 +42,27 @@ namespace PCPartPickerDataLayer
 
         public static void AddCustomer(string nameSurname, string address)
         {
-            _customer = new Customer(nameSurname, address);
+            var customer = new Customer(nameSurname, address);
+            _customers.Add(customer);
+            _currentCustomer = customer;
         }
 
         public static void AddOrder(int cpu, int ram, int ramAmount, int pcCase)
         {
+            IComponent newCpu = new Cpu((CpuEnums.CpuList)cpu);
+
             Order order = new Order();
-            IComponent newCpu = new Cpu(cpu);
             order.componentList.Add(newCpu);
-            _orderList.Add(order);
+            _customers[_customers.IndexOf(currentCustomer)].orderList.Add(order);
+        }
+
+        public static Customer GetCustomer(string nameSurname, string address)
+        {
+            foreach(var customer in _customers)
+            {
+                if (customer.nameSurname == nameSurname && customer.address == address) return customer;
+            }
+            return null;
         }
     }
 }

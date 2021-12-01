@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
-using PCPartPickerDataLayer;
+using DataCollectionLayer;
 
-namespace ModifyLayer
+namespace DomainLayer
 {
     public static class HandleDataModification
     {
@@ -11,24 +11,33 @@ namespace ModifyLayer
             return (suspectString.Any(letter => char.IsDigit(letter)) && string.IsNullOrWhiteSpace(suspectString)) ? false : true;
         }
 
-        public static bool MakeNewCustomer()
+        public static bool HandleLogin(string nameSurname, string address, string option)
         {
-            var nameSurname = Console.ReadLine();
 
-            Console.WriteLine("Upisite svoju adresu:");
-            var address = Console.ReadLine();
+            if (option is "1")
+            {
+                if (!IsValidString(nameSurname) && !IsValidString(address))
+                    return false;
 
-            if (!IsValidString(nameSurname) && !IsValidString(address))
+                if (DataBank.GetCustomer(nameSurname, address) is not null) return false;
+                
+                DataBank.AddCustomer(nameSurname, address);
+                return true;
+            }
+
+            var currentCustomer = DataBank.GetCustomer(nameSurname, address);
+
+            if (currentCustomer is null)
                 return false;
 
-            DataBank.PopulateStore();
-            DataBank.AddCustomer(nameSurname, address);
+            DataBank.currentCustomer = currentCustomer;
+
             return true;
         }
 
         public static void RetriveCustomerData()
         {
-            var customer = DataBank.customer;
+            var customer = DataBank.currentCustomer;
             Console.WriteLine($"Ime i prezime: {customer.nameSurname}\n" +
                 $"Adresa: {customer.address}\n" +
                 $"Udaljenost: {customer.distance}\n");
@@ -51,7 +60,7 @@ namespace ModifyLayer
         public static void RetriveOrderData()
         {
             Console.WriteLine("Lista narudzbi:\n");
-            var listOfOrders = DataBank.orderList;
+            var listOfOrders = DataBank.currentCustomer.orderList;
 
             if (listOfOrders.Count is 0)
             {

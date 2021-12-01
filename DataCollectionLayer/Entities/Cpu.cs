@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DataLayer.Enums;
-using DataLayer.Interfaces;
+using DataCollectionLayer.Enums;
+using DataCollectionLayer.Interfaces;
 
-namespace DataLayer.Entities
+namespace DataCollectionLayer.Entities
 {
     public class Cpu : IComponent
     {
@@ -20,12 +20,21 @@ namespace DataLayer.Entities
 
         public static int amount;
 
-        public Cpu(int type)
+        public Cpu(CpuEnums.CpuList type)
         {
             switch (type)
             {
-                case (int)CpuEnums.CpuList.AMD_DecaCore:
-                    _type = "AMD_DecaCore";
+                case CpuEnums.CpuList.AMD_DecaCore:
+                    _type = "AMD DecaCore";
+                    break;
+                case CpuEnums.CpuList.AMD_OctaCore:
+                    _type = "AMD OctaCore";
+                    break;
+                case CpuEnums.CpuList.Intel_OctaCore:
+                    _type = "Intel OctaCore";
+                    break;
+                case CpuEnums.CpuList.Intel_QuadCore:
+                    _type = "Intel QuadCore";
                     break;
             }
         }
