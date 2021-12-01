@@ -30,6 +30,7 @@ namespace PCPartPickerPresentation
                     case "2":
                         Console.Clear();
                         HandleDataModification.RetriveOrderData();
+                        WriteExitMessage("Narudzbe ispisane");
                         break;
                     case "3":
                         Console.Clear();
@@ -43,7 +44,7 @@ namespace PCPartPickerPresentation
             } while (menu is not "3");
         }
 
-        static void HandleError(string message)
+        static void WriteExitMessage(string message)
         {
             Console.WriteLine($"\n{message}, za povratak na izbornik pritisnite bilo koju tipku!");
             Console.ReadKey();
@@ -52,26 +53,26 @@ namespace PCPartPickerPresentation
 
         static void EnterUser()
         {
-            bool isSuccessfulEntry;
+            bool isSuccessful;
 
             do
             {
                 Console.WriteLine("=======PC Part Picker App=======\nDobrodosli, upisite svoje ime i prezime:");
-                isSuccessfulEntry = HandleDataModification.MakeNewCustomer();
+                isSuccessful = HandleDataModification.MakeNewCustomer();
 
-                if (!isSuccessfulEntry)
-                    HandleError("Ime i prezime krivo upisani");
+                if (!isSuccessful)
+                    WriteExitMessage("Ime i prezime krivo upisani");
 
                 Console.Clear();
                 Console.WriteLine("Logirani korisnik:\n");
                 HandleDataModification.RetriveCustomerData();
 
-            } while (isSuccessfulEntry is false);
+            } while (isSuccessful is false);
         }
 
         static void PrepareOrder()
         {
-            Console.WriteLine("Sastavljam novo racunalo:\n\n");
+            Console.WriteLine("Sastavite komponente novog racunala!\n");
             Console.WriteLine("Izabreite CPU:\n" +
                 "1 - AMD DecaCore\n" +
                 "2 - AMD OctaCore\n" +
@@ -92,7 +93,14 @@ namespace PCPartPickerPresentation
             Console.WriteLine("Izaberite kuciste:\n1 - Metalno\n2 - Plasticno\n3 - Karbonsko");
             var pcCase = int.Parse(Console.ReadLine());
 
-            HandleDataModification.MakeNewOrder(cpu, ramCard, ramCardAmount, massStorage, pcCase);
+            var isSuccessful = HandleDataModification.MakeNewOrder(cpu, ramCard, ramCardAmount, massStorage, pcCase);
+
+            if (isSuccessful)
+            {
+                WriteExitMessage("Narudzba prihvacena");
+                return;
+            }
+            WriteExitMessage("Narudzba odbijena zbog krivog unosa");
         }
     }
 }

@@ -11,7 +11,9 @@ namespace DataLayer.Entities
     {
         private int _totalPrice;
         private DeliveryOption _deliveryOption;
+        private int _orderNumber;
 
+        public int orderNumber { get => _orderNumber; }
         public List<IComponent> componentList = new List<IComponent>();
 
         public enum DeliveryOption
@@ -19,5 +21,11 @@ namespace DataLayer.Entities
             Personally,
             OnAdress
         };
+
+        public Order()
+        {
+            Random rnd = new Random(DateTime.Now.Millisecond);
+            _orderNumber = rnd.Next(1000, 9999);
+        }
     }
 }
