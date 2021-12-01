@@ -70,9 +70,10 @@ namespace DomainLayer
 
             foreach (var order in listOfOrders)
             {
-                Console.WriteLine($"==============\nNarudzba #{order.orderNumber}\n==============\n");
+                Console.WriteLine($"================================\nNarudzba #{order.orderNumber}\n");
                 foreach (var component in order.componentList)
                     Console.WriteLine($"CPU: {component.type}");
+                Console.WriteLine("================================\n");
             }
         }
     }

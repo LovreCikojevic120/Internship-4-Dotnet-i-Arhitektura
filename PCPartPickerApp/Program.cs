@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DomainLayer;
 
-namespace PCPartPickerPresentation
+namespace PresentationLayer
 {
     class Program
     {
@@ -75,7 +75,7 @@ namespace PCPartPickerPresentation
             Console.WriteLine("Upisite svoju adresu:");
             address = Console.ReadLine();
 
-            isSuccessful = HandleDataModification.HandleLogin(nameSurname, address, menu);
+            isSuccessful = HandleDataModification.HandleLogin(nameSurname, address, option);
 
             if (isSuccessful)
             {
