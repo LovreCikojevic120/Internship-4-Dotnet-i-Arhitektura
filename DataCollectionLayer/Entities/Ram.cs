@@ -1,9 +1,8 @@
 ﻿using DataCollectionLayer.Enums;
 using DataCollectionLayer.Interfaces;
-
 namespace DataCollectionLayer.Entities
 {
-    public class Cpu : IComponent
+    public class Ram : IComponent
     {
         private int _price = 20;
         private float _weight = 0;
@@ -12,11 +11,10 @@ namespace DataCollectionLayer.Entities
         public string type { get; set; }
         public int price { get => _price; }
         public float weight { get => _weight; }
-
-        public Cpu(CpuEnums cpuType)
+        public Ram(RamEnums ramType, int numberOfCards)
         {
-            name = "CPU";
-            type = cpuType.ToString().Replace("_", " ");
+            name = "RAM";
+            type = ramType.ToString().Replace("_", " ");
         }
     }
 }

@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace DataCollectionLayer.Enums
 {
-    public enum CpuEnums
+    public enum StorageEnums
     {
-        AMD_DecaCore,
-        AMD_OctaCore,
-        Intel_OctaCore,
-        Intel_QuadCore
+        HDD_2TB,
+        HDD_1TB,
+        SSD_2TB,
+        SSD_1TB
     }
 }

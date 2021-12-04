@@ -1,9 +1,8 @@
 ﻿using DataCollectionLayer.Enums;
 using DataCollectionLayer.Interfaces;
-
 namespace DataCollectionLayer.Entities
 {
-    public class Cpu : IComponent
+    public class Storage : IComponent
     {
         private int _price = 20;
         private float _weight = 0;
@@ -12,11 +11,12 @@ namespace DataCollectionLayer.Entities
         public string type { get; set; }
         public int price { get => _price; }
         public float weight { get => _weight; }
-
-        public Cpu(CpuEnums cpuType)
+        public Storage(StorageEnums storageType)
         {
-            name = "CPU";
-            type = cpuType.ToString().Replace("_", " ");
+            name = "Storage";
+            type = storageType.ToString().Replace("_", " ");
+            if (storageType == StorageEnums.HDD_2TB) _weight = 2;
+            if (storageType == StorageEnums.HDD_1TB) _weight = 1;
         }
     }
 }

@@ -6,12 +6,9 @@ using System.Threading.Tasks;
 
 namespace DataCollectionLayer.Enums
 {
-    public class RamEnums
+    public enum RamEnums
     {
-        public enum RamList
-        {
-            Card4GB = 1,
-            Card8GB = 2
-        };
+        Card4GB,
+        Card8GB
     }
 }

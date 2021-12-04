@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 
 namespace DataCollectionLayer.Enums
 {
-    public enum CpuEnums
+    public enum PCaseEnums
     {
-        AMD_DecaCore,
-        AMD_OctaCore,
-        Intel_OctaCore,
-        Intel_QuadCore
+        Metal,
+        Plastic,
+        Carbon
     }
 }

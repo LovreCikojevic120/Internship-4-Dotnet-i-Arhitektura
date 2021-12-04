@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DomainLayer;
+using UtilsClass;
 
 namespace PresentationLayer
 {
@@ -20,97 +17,80 @@ namespace PresentationLayer
                     "2 - Prijavi se postojecim racunom\n" +
                     "3 - Izadi iz aplikacije\n");
                 menu = Console.ReadLine();
-
+                
                 switch (menu)
                 {
                     case "1":
-                        SignUp(menu);
+                        SignUp(menu, "Racun uspjesno napravljen");
                         break;
                     case "2":
-                        SignIn(menu);
+                        SignUp(menu, "Uspjesno ste prijavljeni");
                         break;
                     case "3":
                         Console.Clear();
                         Console.WriteLine("Dovidenja!");
                         return;
                     default:
-                        WriteExitMessage("Krivi unos izbornika");
+                        Validator.WriteExitMessage("Krivi unos izbornika");
                         break;
                 }
 
             } while (menu is not "3");
         }
 
-        static void SignUp(string option)
+        static void SignUp(string option, string message)
         {
             string nameSurname = null, address = null;
             bool isSuccessful = false;
 
-            Console.WriteLine("Upisite ime i prezime:");
-            nameSurname = Console.ReadLine();
+            nameSurname = Validator.ValidateString("ime i prezime");
 
-            Console.WriteLine("Upisite svoju adresu:");
-            address = Console.ReadLine();
+            address = Validator.ValidateString("adresu");
 
-            isSuccessful = HandleDataModification.HandleLogin(nameSurname, address, option);
+            isSuccessful = DataProcessor.LoginProccess(nameSurname, address, option);
 
             if (isSuccessful)
             {
-                WriteExitMessage("Vas racun je uspjesno napravljen");
-                CreateOrder();
+                Validator.WriteExitMessage(message);
+                DisplayMainMenu();
                 return;
             }
 
-            WriteExitMessage("Unos krivo formatiran");
+            Validator.WriteExitMessage("Unos krivo formatiran ili korisnik ne postoji");
         }
 
-        static void SignIn(string option)
-        {
-            string nameSurname = null, address = null;
-            bool isSuccessful = false;
-
-            Console.WriteLine("Upisite ime i prezime:");
-            nameSurname = Console.ReadLine();
-
-            Console.WriteLine("Upisite svoju adresu:");
-            address = Console.ReadLine();
-
-            isSuccessful = HandleDataModification.HandleLogin(nameSurname, address, option);
-
-            if (isSuccessful)
-            {
-                WriteExitMessage("Uspjesno ste prijavljeni");
-                CreateOrder();
-                return;
-            }
-
-            WriteExitMessage("Unos krivo formatiran ili korisnik ne postoji");
-        }
-
-        static void CreateOrder()
+        static void DisplayMainMenu()
         {
             string menu = null;
 
             do
             {
+                DataProcessor.RetriveCustomerData();
+
                 Console.WriteLine("Izaberite akciju:\n" +
                     "1 - Sastavi i naruci novo racunalo\n" +
                     "2 - Prikazi moje narudzbe\n" +
                     "3 - Odjavi se");
                 menu = Console.ReadLine();
+
                 switch (menu)
                 {
                     case "1":
                         Console.Clear();
-                        PrepareOrder();
+                        ComputerAssembler();
+                        Console.Clear();
+                        HandleCoupons();
+                        Console.Clear();
+                        HandleDelivery();
                         break;
                     case "2":
                         Console.Clear();
-                        HandleDataModification.RetriveOrderData();
-                        WriteExitMessage("Narudzbe ispisane");
+                        DataProcessor.RetriveOrderData();
+                        Validator.WriteExitMessage("Narudzbe ispisane");
                         break;
                     case "3":
-                        WriteExitMessage("Odjavljeni ste");
+                        DataProcessor.Logout();
+                        Validator.WriteExitMessage("Odjavljeni ste");
                         return;
                     default:
                         Console.WriteLine("Krivi unos na izborniku!");
@@ -120,44 +100,71 @@ namespace PresentationLayer
             } while (menu is not "3");
         }
 
-        static void WriteExitMessage(string message)
+        static void HandleCoupons()
         {
-            Console.WriteLine($"\n{message}, za nastavak pritisnite bilo koju tipku!");
-            Console.ReadKey();
-            Console.Clear();
+            bool isSuccessful;
+            string option = null;
+
+            do
+            {
+                Console.WriteLine("Iskoristite svoje kupone:\n" +
+                    "1 - Kupon za vjerno clanstvo\n" +
+                    "2 - Iskoristi kupi 3 plati 2 ponudu\n" +
+                    "3 - Iskoristi bon za kupon\n" +
+                    "0 - Ne zelim iskoristiti kupon");
+                option = Console.ReadLine();
+                isSuccessful = Validator.IsValidMenuOption("0", "3", option);
+
+                if (isSuccessful is false)
+                    Validator.WriteExitMessage("Krivi unos izbornika");
+
+            } while (isSuccessful is false);
+
+            DataProcessor.CouponProccess(option);
         }
 
-        static void PrepareOrder()
+        static void HandleDelivery()
         {
-            Console.WriteLine("Sastavite komponente novog racunala!\n");
-            Console.WriteLine("Izabreite CPU:\n" +
-                "1 - AMD DecaCore\n" +
-                "2 - AMD OctaCore\n" +
-                "3 - INTEL OctaCore\n" +
-                "4 - INTEL QuadCore");
-            var cpu = int.Parse(Console.ReadLine());
-
-            Console.WriteLine("Izaberite RAM:\n1 - 8GB card\n2 - 4GB card");
-            var ramCard = int.Parse(Console.ReadLine());
-
-            Console.WriteLine("Upisite kolicinu RAM kartica:");
-            var ramCardAmount = int.Parse(Console.ReadLine());
-            //Provjera kolicine
-
-            Console.WriteLine("Izaberite HDD:\n1 - 2TB HDD\n2 - 1TB HDD\n3 - 2TB SSD\n4 - 1TB SSD");
-            var massStorage = int.Parse(Console.ReadLine());
-
-            Console.WriteLine("Izaberite kuciste:\n1 - Metalno\n2 - Plasticno\n3 - Karbonsko");
-            var pcCase = int.Parse(Console.ReadLine());
-
-            var isSuccessful = HandleDataModification.MakeNewOrder(cpu, ramCard, ramCardAmount, massStorage, pcCase);
-
-            if (isSuccessful)
+            bool isSuccessful;
+            string option = null;
+            do
             {
-                WriteExitMessage("Narudzba prihvacena");
-                return;
-            }
-            WriteExitMessage("Narudzba odbijena zbog krivog unosa");
+                Console.WriteLine("Kako zelite preuzeti narudzbu:\n1 - Osobno\n2 - Dostava");
+                option = Console.ReadLine();
+                isSuccessful = Validator.IsValidMenuOption("1", "2", option);
+
+                if (isSuccessful is false)
+                    Validator.WriteExitMessage("Krivi unos izbornika");
+            } while (isSuccessful is false);
+
+            DataProcessor.DeliveryProccess(option);
+            Validator.WriteExitMessage("Narudzba prihvacena");
+        }
+
+        static void ComputerAssembler()
+        {
+            string menu = null;
+            DataProcessor.ComponentPicker();
+
+            do
+            {
+                Console.WriteLine("Racunalo uspjesno sastavljeno!\n" +
+                    "1 - Sastavi jos racunala\n" +
+                    "2 - Nastavi na narucivanje i placanje");
+                menu = Console.ReadLine();
+
+                switch (menu)
+                {
+                    case "1":
+                        DataProcessor.ComponentPicker();
+                        break;
+                    case "2":
+                        return;
+                    default:
+                        Console.WriteLine("Krivi unos izbornika");
+                        break;
+                }
+            } while (menu is not "2");
         }
     }
 }

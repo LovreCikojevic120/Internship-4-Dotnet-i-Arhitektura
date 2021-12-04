@@ -8,9 +8,10 @@ namespace DataCollectionLayer.Interfaces
 {
     public interface IComponent
     {
+        public string name { get; }
         public string type { get; set; }
-        public string price { get; set; }
-        public string weight { get; set; }
+        public int price { get; }
+        public float weight { get; }
 
         public static int amount;
     }

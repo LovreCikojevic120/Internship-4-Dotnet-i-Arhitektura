@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace DataCollectionLayer.Enums
 {
-    public enum CpuEnums
+    public enum DeliveryEnums
     {
-        AMD_DecaCore,
-        AMD_OctaCore,
-        Intel_OctaCore,
-        Intel_QuadCore
+        Kamion,
+        Automobil,
+        Motocikl,
+        Osobno
     }
 }
