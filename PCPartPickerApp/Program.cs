@@ -103,6 +103,7 @@ namespace PresentationLayer
         static void HandleCoupons()
         {
             bool isSuccessful;
+            bool hasCoupon;
             string option = null;
 
             do
@@ -115,12 +116,16 @@ namespace PresentationLayer
                 option = Console.ReadLine();
                 isSuccessful = Validator.IsValidMenuOption("0", "3", option);
 
+                hasCoupon = DataProcessor.CouponProccess(option);
+
                 if (isSuccessful is false)
-                    Validator.WriteExitMessage("Krivi unos izbornika");
+                    Validator.WriteExitMessage("Krivo ste unijeli opciju izbornika");
+                if (hasCoupon is false)
+                    Validator.WriteExitMessage("Nemate izabrani kupon");
 
-            } while (isSuccessful is false);
+            } while (hasCoupon is false);
 
-            DataProcessor.CouponProccess(option);
+            
         }
 
         static void HandleDelivery()

@@ -31,17 +31,18 @@ namespace DataCollectionLayer.Entities
             {
                 deliveryOption = DeliveryEnums.Motocikl;
                 deliveryPrice = 0.5f * customerDistance;
+                return;
             }
             if (totalWeight > 10f)
             {
                 deliveryOption = DeliveryEnums.Kamion;
                 deliveryPrice = 50f + 0.5f * customerDistance;
+                return;
             }
-            else 
-            {
-                deliveryOption = DeliveryEnums.Automobil;
-                deliveryPrice = 0.6f * customerDistance;
-            }
+
+            deliveryOption = DeliveryEnums.Automobil;
+            deliveryPrice = 0.6f * customerDistance;
+            
         }
 
         private void CalculateWeight()

@@ -116,6 +116,7 @@ namespace DomainLayer
                 Console.WriteLine($"\nPocetna cijena racunala: {order.orderPrice}kn\n" +
                     $"Cijena sa popustom: {order.orderPrice - order.priceReduction}kn\n" +
                     $"Cijena dostave: {order.deliveryPrice}kn\n" +
+                    $"Ukupna cijena: {order.orderPrice-order.priceReduction+order.deliveryPrice}\n" +
                     $"Nacin dostave: {order.deliveryOption}\n");
 
                 Console.WriteLine("================================\n");
@@ -169,17 +170,23 @@ namespace DomainLayer
             DataBank.currentOrder = null;
         }
 
-        public static void CouponProccess(string option)
+        public static bool CouponProccess(string option)
         {
             DataBank.currentOrder.CalculateOrderPrice();
 
             if (option=="1" && DataBank.currentCustomer.membershipCoupon is true)
+            {
                 DataBank.currentOrder.priceReduction = 100;
+                return true;
+            }
 
-            if(option == "2" && 
-                (DataBank.currentOrder.computers.Count > 2 || 
+            if (option == "2" &&
+                (DataBank.currentOrder.computers.Count > 2 ||
                 DataBank.currentOrder.computers.Any(computer => computer.numberOfRamCards > 2)))
+            {
                 DataBank.currentOrder.CalculatePriceReduction();
+                return true;
+            }
 
             if (option == "3" && DataBank.coupons.Count is not 0)
             {
@@ -189,10 +196,16 @@ namespace DomainLayer
                 {
                     DataBank.currentOrder.priceReduction = DataBank.currentOrder.orderPrice * DataBank.coupons[code];
                     DataBank.coupons.Remove(code);
+                    return true;
                 }
+
+                Console.WriteLine("Kupon koji ste unijeli nije ispravan!");
+                return false;
             }
 
-            return;
+            if (option == "0") return true;
+
+            return false;
         }
 
         public static void Logout()
